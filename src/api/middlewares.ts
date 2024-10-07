@@ -38,5 +38,9 @@ import {
         matcher: "/admin/products",
         middlewares: [authenticate(), registerLoggedInUser],
       },
+      {
+        matcher: "/admin/store",
+        middlewares: [authenticate(), registerLoggedInUser]
+      }
     ],
   }
