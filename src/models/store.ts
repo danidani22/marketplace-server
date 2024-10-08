@@ -4,6 +4,7 @@ import {
 } from "@medusajs/medusa"
 import { User } from "./user";
 import { Product } from "./product";
+import { Order } from "./order";
 
 @Entity()
 export class Store extends MedusaStore {
@@ -13,4 +14,7 @@ export class Store extends MedusaStore {
 
   @OneToMany(() => Product, (product) => product?.store)
   products?: Product[];
+
+  @OneToMany(() => Order, (order) => order?.store)
+  orders?: Order[];
 }
