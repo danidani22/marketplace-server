@@ -38,5 +38,8 @@ declare module '@medusajs/medusa/dist/models/shipping-option' {
     declare interface Order {
       store_id?: string;
       store?: Store;
+      order_parent_id?: string
+      parent?: Order
+      children?: Order[]
     }
   }
