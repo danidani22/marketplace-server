@@ -1,4 +1,4 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm"
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from "typeorm"
 import {
     Order as MedusaOrder,
 } from "@medusajs/medusa"
@@ -13,4 +13,16 @@ export class Order extends MedusaOrder {
     @ManyToOne(() => Store, (store) => store.orders)
     @JoinColumn({ name: 'store_id', referencedColumnName: 'id' })
     store?: Store;
+
+    @Index('OrderParentId')
+    @Column({ nullable: true })
+    order_parent_id?: string
+
+    @ManyToOne(() => Order, (order) => order.children)
+    @JoinColumn({ name: 'order_parent_id', referencedColumnName: 'id' })
+    parent?: Order
+
+    @OneToMany(() => Order, (order) => order.parent)
+    @JoinColumn({ name: 'id', referencedColumnName: 'order_parent_id' })
+    children?: Order[]
 }
