@@ -20,6 +20,20 @@ export declare module "@medusajs/medusa/dist/models/store" {
     }
   }
 
+  declare module '@medusajs/medusa/dist/models/shipping-profile' {
+    interface ShippingProfile {
+        store_id?: string
+        store?: Store
+    }
+}
+
+declare module '@medusajs/medusa/dist/models/shipping-option' {
+    interface ShippingOption {
+        store_id?: string
+        store?: Store
+    }
+}
+
   export declare module "@medusajs/medusa/dist/models/order" {
     declare interface Order {
       store_id?: string;
