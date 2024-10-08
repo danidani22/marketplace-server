@@ -8,6 +8,10 @@ class StoreService extends MedusaStoreService {
   static LIFE_TIME = Lifetime.SCOPED
   protected readonly loggedInUser_: User | null
 
+  static Events = {
+    CREATED: 'store.created',
+}
+
   constructor(container, options) {
     // @ts-expect-error prefer-rest-params
     super(...arguments)
