@@ -1,4 +1,4 @@
-import { Entity, OneToMany } from "typeorm"
+import { Entity, OneToMany, Column } from "typeorm"
 import {
   Store as MedusaStore,
 } from "@medusajs/medusa"
@@ -10,7 +10,7 @@ import { ShippingProfile } from "./shipping-profile"
 
 @Entity()
 export class Store extends MedusaStore {
-  // TODO add relations
+
   @OneToMany(() => User, (user) => user?.store)
   members?: User[];
 
@@ -24,5 +24,13 @@ export class Store extends MedusaStore {
   shippingOptions?: ShippingOption[];
 
   @OneToMany(() => ShippingProfile, (shippingProfile) => shippingProfile.store)
-    shippingProfiles?: ShippingProfile[]
+    shippingProfiles?: ShippingProfile[];
+
+  @Column({ nullable: true })
+  stripe_account_id?: string
+
+  @Column({ default: false })
+  stripe_account_enabled: boolean
+
+  
 }
