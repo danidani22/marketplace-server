@@ -1,3 +1,5 @@
+// Here we alter the shipping option table to include the store relation
+
 import { MigrationInterface, QueryRunner } from "typeorm"
 
 export class AddShippingOptionStoreId1728354454139 implements MigrationInterface {

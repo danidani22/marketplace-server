@@ -5,12 +5,14 @@ import {
     ShippingProfileType
 } from '@medusajs/medusa'
 import { Lifetime } from 'awilix'
-
+import { 
+    CreateShippingProfile as MedusaCreateShippingProfile 
+} from '@medusajs/medusa/dist/types/shipping-profile'
 import { ShippingProfile } from '../models/shipping-profile'
 import type { User } from '../models/user'
 
-import { CreateShippingProfile as MedusaCreateShippingProfile } from '@medusajs/medusa/dist/types/shipping-profile'
 
+// Defining our types to use
 type ShippingProfileSelector = {
     store_id?: string
 } & Selector<ShippingProfile>
@@ -27,6 +29,7 @@ class ShippingProfileService extends MedusaShippingProfileService {
         // @ts-ignore
         super(...arguments)
 
+        // Get the logged in user
         try {
             this.loggedInUser_ = container.loggedInUser
         } catch (e) {
@@ -34,6 +37,7 @@ class ShippingProfileService extends MedusaShippingProfileService {
         }
     }
 
+    // Override list method to include the store relation
     async list(
         selector: ShippingProfileSelector = {},
         config: FindConfig<ShippingProfile> = {}
@@ -59,6 +63,7 @@ class ShippingProfileService extends MedusaShippingProfileService {
         return await super.list(selector, config);
     }
 
+    // Override create method to include the store relation
     async create(profile: CreateShippingProfile): Promise<ShippingProfile> {
         if (!profile.store_id && this.loggedInUser_?.store_id) {
             profile.store_id = this.loggedInUser_.store_id
@@ -67,6 +72,7 @@ class ShippingProfileService extends MedusaShippingProfileService {
         return await super.create(profile)
     }
 
+    // Override to retrive the logged in user's store shipping profile
     async retrieveDefault(): Promise<ShippingProfile> {
         if (this.loggedInUser_?.store_id) {
             return this.shippingProfileRepository_.findOne({
@@ -80,6 +86,7 @@ class ShippingProfileService extends MedusaShippingProfileService {
         return super.retrieveDefault()
     }
 
+    // Override the create to apply to the given store
     async createDefaultForStore(storeId: string): Promise<ShippingProfile> {
         return await this.atomicPhase_(async (manager) => {
             const profileRepository = manager.withRepository(this.shippingProfileRepository_)

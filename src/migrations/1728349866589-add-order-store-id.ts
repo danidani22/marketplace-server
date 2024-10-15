@@ -1,3 +1,5 @@
+// Here we alter the order table to include a store relation and fields
+
 import { MigrationInterface, QueryRunner } from "typeorm"
 
 export class AddOrderStoreId1728349866589 implements MigrationInterface {

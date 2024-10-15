@@ -1,3 +1,5 @@
+// Extending the default payment entity to include our custom columns
+
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 
 import { Payment as MedusaPayment } from '@medusajs/medusa'

@@ -1,7 +1,7 @@
+// Extending the default shipping profile entity to include our custom columns
+
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
-
 import { ShippingProfile as MedusaShippingProfile } from '@medusajs/medusa'
-
 import { Store } from './store'
 
 @Entity()

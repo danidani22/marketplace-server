@@ -1,7 +1,7 @@
+// Overriding the default repository to apply to our extended entity
+
 import { Order } from "../models/order"
-import {
-    dataSource,
-} from "@medusajs/medusa/dist/loaders/database"
+import { dataSource } from "@medusajs/medusa/dist/loaders/database"
 import {
     OrderRepository as MedusaOrderRepository
 } from "@medusajs/medusa/dist/repositories/order"

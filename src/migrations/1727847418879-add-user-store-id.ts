@@ -1,3 +1,5 @@
+// Here we add the store relation and fields to the user
+
 import { MigrationInterface, QueryRunner } from "typeorm"
 
 export class AddUserStoreId1727847418879 implements MigrationInterface {

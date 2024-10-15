@@ -1,3 +1,5 @@
+// Here we alter the payment table to include a payment parent relation
+
 import { MigrationInterface, QueryRunner } from "typeorm"
 
 export class AddPaymentChildren1728374955691 implements MigrationInterface {

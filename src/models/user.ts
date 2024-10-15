@@ -1,3 +1,5 @@
+// Extending the default user entity to include our custom columns
+
 import { 
     Column,
     Entity,
@@ -5,9 +7,7 @@ import {
     JoinColumn,
     ManyToOne,
   } from "typeorm"
-  import {
-    User as MedusaUser,
-  } from "@medusajs/medusa"
+  import { User as MedusaUser } from "@medusajs/medusa"
   import { Store } from "./store"
 
   @Entity()

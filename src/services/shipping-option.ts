@@ -1,13 +1,13 @@
+// Here we override the default methods from the Medusa ShippingOptionService
+
 import { Cart, ShippingOptionService as MedusaShippingOptionService } from '@medusajs/medusa'
 import { Lifetime } from 'awilix'
-
 import { FindConfig, Selector } from '@medusajs/medusa'
-
-import type { ShippingOption } from '../models/shipping-option'
 import { CreateShippingOptionInput as MedusaCreateShippingOptionInput } from '@medusajs/medusa/dist/types/shipping-options'
-
+import type { ShippingOption } from '../models/shipping-option'
 import type { User } from '../models/user'
 
+// Define the types we will use here
 type ShippingOptionSelector = {
     store_id?: string
 } & Selector<ShippingOption>
@@ -23,7 +23,8 @@ class ShippingOptionService extends MedusaShippingOptionService {
     constructor(container, options) {
         // @ts-ignore
         super(...arguments)
-
+        
+        // Get the logged in user
         try {
             this.loggedInUser_ = container.loggedInUser
         } catch (e) {
@@ -31,6 +32,7 @@ class ShippingOptionService extends MedusaShippingOptionService {
         }
     }
 
+    // Override the list method to include the custom fields
     async list(
         selector?: ShippingOptionSelector & { q?: string },
         config?: FindConfig<ShippingOption>,
@@ -40,12 +42,12 @@ class ShippingOptionService extends MedusaShippingOptionService {
         }
 
         config.select?.push('store_id')
-
         config.relations?.push('store')
 
         return await super.list(selector, config)
     }
 
+    // Override the listAndCount method to include the custom fields
     async listAndCount(
         selector?: ShippingOptionSelector & { q?: string },
         config?: FindConfig<ShippingOption>,
@@ -55,12 +57,12 @@ class ShippingOptionService extends MedusaShippingOptionService {
         }
 
         config.select?.push('store_id')
-
         config.relations?.push('store')
 
         return await super.listAndCount(selector, config)
     }
 
+    // Override the create method to link the logged in user's store id to the shipping option
     async create(data: CreateShippingOptionInput): Promise<ShippingOption> {
         if (!data.store_id && this.loggedInUser_?.store_id) {
             data.store_id = this.loggedInUser_.store_id
@@ -69,6 +71,8 @@ class ShippingOptionService extends MedusaShippingOptionService {
         return await super.create(data)
     }
 
+
+    // Override method to include store id checker
     async validateCartOption(option: ShippingOption, cart: Cart): Promise<ShippingOption | null> {
         const validatedOption = await super.validateCartOption(option, cart)
 

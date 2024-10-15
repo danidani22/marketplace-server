@@ -1,3 +1,5 @@
+// This loader initialises the shipping profiles for all stores
+
 import { Logger, MedusaContainer } from '@medusajs/medusa'
 import type StoreRepository from '@medusajs/medusa/dist/repositories/store'
 import type ShippingProfileService from '../services/shipping-profile'

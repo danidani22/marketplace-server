@@ -1,4 +1,4 @@
-// src/api/index.ts
+
 import { registerOverriddenValidators } from "@medusajs/medusa"
 
 // Here we are importing the original Medusa validator as an alias :

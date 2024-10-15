@@ -1,3 +1,5 @@
+// Here we override methods from the default Medusa ProductService
+
 import { Lifetime } from "awilix"
 import { 
   ProductService as MedusaProductService, Product, User,
@@ -20,6 +22,7 @@ class ProductService extends MedusaProductService {
     // @ts-expect-error prefer-rest-params
     super(...arguments)
 
+    // Get the logged in user
     try {
       this.loggedInUser_ = container.loggedInUser
     } catch (e) {
@@ -27,51 +30,45 @@ class ProductService extends MedusaProductService {
     }
   }
 
-  async list(selector: ProductSelector, config?: FindProductConfig): Promise<Product[]> {
-    if (!selector.store_id && this.loggedInUser_?.store_id) {
-      selector.store_id = this.loggedInUser_.store_id
-    }
-
-    config.select?.push('store_id')
-
-    config.relations?.push('store')
-
-    return await super.list(selector, config)
-  }
-
+  // Override the method which returns a list of the products
   async listAndCount(selector: ProductSelector, config?: FindProductConfig): Promise<[Product[], number]> {
+    // Set the store id to the store of the logged in user if we aren't given a store id in the query
     if (!selector.store_id && this.loggedInUser_?.store_id) {
       selector.store_id = this.loggedInUser_.store_id
     }
 
+    // Include the custom fields
     config.select?.push('store_id')
-
+    config.select?.push("featured")
     config.relations?.push('store')
 
     return await super.listAndCount(selector, config)
   }
 
+  // Override method which retrives a single product
   async retrieve(productId: string, config?: FindProductConfig): Promise<Product> {
+    // Include the custom fields
     config.relations = [
       ...(config.relations || []),
-      'store'
-    ]
+      'store',
+        ]
+        config.select?.push('featured')
 
     const product = await super.retrieve(productId, config);
 
+    // Make sure that the product is from the store of the logged in user
     if (product.store?.id && this.loggedInUser_?.store_id && product.store.id !== this.loggedInUser_.store_id) {
-      // Throw error if you don't want a product to be accessible to other stores
       throw new Error('Product does not exist in store.');
     }
-
+    
     return product
   }
 
+  // Override the create method to include the store if of the logged in user
   async create(productObject: CreateProductInput): Promise<Product> {
     if (!productObject.store_id && this.loggedInUser_?.store_id) {
       productObject.store_id = this.loggedInUser_.store_id
     }
-
     return await super.create(productObject);
   }
 }

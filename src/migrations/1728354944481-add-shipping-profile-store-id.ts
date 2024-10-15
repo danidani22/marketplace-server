@@ -1,3 +1,5 @@
+// Here we alter the shipping profile table to include the store relation
+
 import { MigrationInterface, QueryRunner } from "typeorm"
 
 export class AddShippingProfileStoreId1728354944481 implements MigrationInterface {

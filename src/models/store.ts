@@ -1,7 +1,7 @@
+// Extending the default store entity to include our custom columns
+
 import { Entity, OneToMany, Column } from "typeorm"
-import {
-  Store as MedusaStore,
-} from "@medusajs/medusa"
+import { Store as MedusaStore } from "@medusajs/medusa"
 import { User } from "./user";
 import { Product } from "./product";
 import { Order } from "./order";

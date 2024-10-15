@@ -3,6 +3,8 @@ export declare module "@medusajs/medusa/dist/models/store" {
       members?: User[];
       products?: Product[];
       orders?: Order[];
+      stripe_account_id?: string
+      stripe_account_enabled: boolean
     }
   }
   
@@ -17,6 +19,7 @@ export declare module "@medusajs/medusa/dist/models/store" {
     declare interface Product {
       store_id?: string;
       store?: Store;
+      featured: boolean
     }
   }
 

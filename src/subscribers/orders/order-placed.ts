@@ -1,3 +1,7 @@
+// Here we respond to an order placed event
+// The idea being that we can properly respond when an order is placed which includes products from multiple stores.
+// Therefore we need to split the order up into child orders, one for each relevant store
+
 import {
     LineItem,
     Logger,
@@ -49,7 +53,7 @@ export default async function handleOrderPlaced({
             return
         }
 
-        // #1 : Group Items By Store Id
+        // First we group items by store Id
 
         const storesWithItems = new Map<string, Order['items']>()
 
@@ -69,10 +73,10 @@ export default async function handleOrderPlaced({
             storesWithItems.get(storeId).push(item)
         }
 
-        // #2 : For each store, create a new order with the relevant items and shipping methods
+        // For each store, create a new order with the relevant items and shipping methods
         for (const [storeId, items] of storesWithItems.entries()) {
 
-            // #2.1 : Create a new order
+            // Create a new order
             const childOrder = orderRepo.create({
                 ...order,
                 order_parent_id: order.id,
@@ -85,7 +89,7 @@ export default async function handleOrderPlaced({
 
             const savedChildOrder = await orderRepo.save(childOrder)
 
-            // #2.2 : Create a new line item for each item in the order
+            // Create a new line item for each item in the order
             let totalItemsAmount: number = 0
             for (const item of items) {
                 const lineItem = lineItemRepo.create({
@@ -98,11 +102,11 @@ export default async function handleOrderPlaced({
                 await lineItemRepo.save(lineItem)
 
 
-                // We compute the total order amount for the child order
+                // Compute the total order amount for the child order
                 totalItemsAmount += item.total
             }
 
-            // #2.3 : Create a new shipping method for each child order with a matching shipping option that is in the same store
+            // Create a new shipping method for each child order with a matching shipping option that is in the same store
             let totalShippingAmount: number = 0
             for (const shippingMethod of order.shipping_methods) {
                 const shippingOption = await shippingOptionService.retrieve(shippingMethod.shipping_option_id)
@@ -125,10 +129,10 @@ export default async function handleOrderPlaced({
             }
 
             const childPayment = paymentRepo.create({
-                ...order.payments[0], // In our case, we only have one payment for the order
+                ...order.payments[0], // Oonly have one payment for the order
                 payment_parent_id: order.payments[0].id,
                 order_id: savedChildOrder.id,
-                amount: totalItemsAmount + totalShippingAmount, // This is the total amount of the child order
+                amount: totalItemsAmount + totalShippingAmount, // Total of the child order
                 cart_id: null,
                 cart: null,
                 id: null,
@@ -138,7 +142,7 @@ export default async function handleOrderPlaced({
 
         }
 
-        // #3 : Capture the payment for the parent order (it will also capture the child orders)
+        // Capture the payment for the parent order (it will also capture the child orders)
         await orderService.withTransaction(m).capturePayment(order.id)
 
         logger.success(orderActivity, `Order ${data.id} has been split into ${storesWithItems.size} child orders.`)

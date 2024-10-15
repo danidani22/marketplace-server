@@ -1,3 +1,5 @@
+// Here we alter the store table to add the fields required to hold the Stripe information
+
 import { MigrationInterface, QueryRunner } from "typeorm"
 
 export class AddStoreStripeAccount1728459912598 implements MigrationInterface {

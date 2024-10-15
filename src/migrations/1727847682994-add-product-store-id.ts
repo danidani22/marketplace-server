@@ -1,3 +1,5 @@
+// Here we alter the product table to include the store relation and fields
+
 import { MigrationInterface, QueryRunner } from "typeorm"
 
 export class AddProductStoreId1727847682994 implements MigrationInterface {

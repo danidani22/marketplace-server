@@ -1,3 +1,5 @@
+// Here we respond to the order updated event for the parent order
+
 import {
     FulfillmentStatus,
     OrderStatus,
@@ -57,7 +59,7 @@ async function getStatusFromChildren(order: Order) {
     }
 
     let statuses = order.children.map((child) => child.status)
-    //remove duplicate statuses
+    // Remove duplicate statuses
     statuses = [...new Set(statuses)]
 
     if (statuses.length === 1) {
@@ -67,7 +69,7 @@ async function getStatusFromChildren(order: Order) {
     statuses = statuses.filter((status) => status !== OrderStatus.CANCELED && status !== OrderStatus.ARCHIVED)
 
     if (!statuses.length) {
-        //all child orders are archived or canceled
+        // All child orders are archived or canceled
         return OrderStatus.CANCELED
     }
 
@@ -75,15 +77,14 @@ async function getStatusFromChildren(order: Order) {
         return statuses[0]
     }
 
-    //check if any order requires action
+    // Check if any order requires action
     const hasRequiresAction = statuses.some((status) => status === OrderStatus.REQUIRES_ACTION)
 
     if (hasRequiresAction) {
         return OrderStatus.REQUIRES_ACTION
     }
 
-    //since more than one status is left and we filtered out canceled, archived,
-    //and requires action statuses, only pending and complete left. So, return pending
+    // Since more than one status is left and we filtered out canceled, archived, and requires action statuses, only pending and complete left. So, return pending
     return OrderStatus.PENDING
 }
 

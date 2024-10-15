@@ -1,3 +1,5 @@
+// Here we alter the order table to include a order parent relation
+
 import { MigrationInterface, QueryRunner } from "typeorm"
 
 export class AddOrderChildren1728356974281 implements MigrationInterface {

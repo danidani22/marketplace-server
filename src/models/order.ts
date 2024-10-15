@@ -1,3 +1,5 @@
+// Extending the default order entity to include our custom columns
+
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from "typeorm"
 import {
     Order as MedusaOrder,
