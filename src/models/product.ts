@@ -1,3 +1,6 @@
+// Extending the default product entity to include our custom columns
+
+
 import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm"
 import {
   Product as MedusaProduct,
@@ -13,4 +16,7 @@ export class Product extends MedusaProduct {
   @ManyToOne(() => Store, (store) => store.products)
   @JoinColumn({ name: 'store_id', referencedColumnName: 'id' })
   store?: Store;
+
+  @Column({ nullable: true})
+  featured: boolean
 }
