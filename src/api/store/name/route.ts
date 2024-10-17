@@ -1,11 +1,11 @@
+// Custom API to more easily return a store based on the name given in the query
+
 import type { MedusaRequest, MedusaResponse } from '@medusajs/medusa';
 import { EntityManager } from 'typeorm';
 import { Store } from '../../../models/store';
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const storeName = req.query.store_name;
-
-  console.log(storeName as string)
 
   if (!storeName) return res.json({ error: 'Missing store name field' });
 
