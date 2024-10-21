@@ -11,6 +11,6 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
     const productRepo = manager.getRepository(Product);
     let products = await productRepo.find({ where: { featured: true } });
 
-    return res.json(products);
+    return res.json(products.slice(0, 6));
   });
 };
