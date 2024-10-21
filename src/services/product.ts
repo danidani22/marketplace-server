@@ -30,7 +30,24 @@ class ProductService extends MedusaProductService {
     }
   }
 
-  // Override the method which returns a list of the products
+  // Override the method which returns a list of products
+  async list(selector: ProductSelector, config?: FindProductConfig): Promise<Product[]> {
+    // Set the store id to the store of the logged in user if we aren't given a store id in the query
+    if (!selector.store_id && this.loggedInUser_?.store_id) {
+      selector.store_id = this.loggedInUser_.store_id
+    }
+
+    // Include the custom fields
+    config.select?.push('store_id')
+    config.select?.push("featured")
+    config.relations?.push('store')
+
+    return await super.list(selector, config)
+  }
+
+  
+
+  // Override the method which returns and counts a list of the products
   async listAndCount(selector: ProductSelector, config?: FindProductConfig): Promise<[Product[], number]> {
     // Set the store id to the store of the logged in user if we aren't given a store id in the query
     if (!selector.store_id && this.loggedInUser_?.store_id) {
